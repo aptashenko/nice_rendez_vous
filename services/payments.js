@@ -4,24 +4,24 @@ import {encrypt} from "./utils.js";
 
 const BASE_URL = 'https://api.wayforpay.com/api';
 export const SECRET_KEY = process.env.WAY_FOR_PAY_KEY;
-export const createPayment = async (id, amount, plan, currency = 'EUR') => {
+export const createPayment = async (id, {amount, currency, products, label}) => {
     const wayforpaySettings = {
         transactionType: 'CREATE_INVOICE',
-        merchantAccount: 'test_merch_n1',
-        merchantDomainName: 'utprozorro.com.ua',
+        merchantAccount: 'freelance_user_676d9a1c9555d',
+        merchantDomainName: 't.me/rendezVousNice_bot',
         apiVersion: '1',
         serviceUrl: 'https://7dac-2a02-8440-d400-6d32-69b9-ca2c-9281-1fea.ngrok-free.app/wayforpay-callback'
     }
 
     const paymentData = {
-        orderReference: `ORDER__${plan}__${id}__${Date.now()}`,
+        orderReference: `ORDER__${label}__${id}__${Date.now()}`,
         orderDate: Date.now(),
         amount,
         currency,
-        productName: ['test'],
-        productPrice: [1],
-        productCount: [1]
+        ...products
     }
+
+
 
     const stringifyData = [
         wayforpaySettings.merchantAccount,
@@ -31,17 +31,21 @@ export const createPayment = async (id, amount, plan, currency = 'EUR') => {
         paymentData.amount,
         paymentData.currency,
         paymentData.productName[0],
-        paymentData.productPrice[0],
         paymentData.productCount[0],
+        paymentData.productPrice[0],
     ].join(';')
 
     const hash = encrypt(stringifyData, SECRET_KEY)
+
+    console.log('resp1', SECRET_KEY)
 
     const payload = {
         ...wayforpaySettings,
         ...paymentData,
         merchantSignature: hash
     };
+
+    console.log(stringifyData, 'resp1')
 
     try {
         const { data, status } = await axios.post(BASE_URL, payload);

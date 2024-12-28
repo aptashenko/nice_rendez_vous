@@ -84,7 +84,17 @@ export async function startTelegramBot() {
                 parse_mode: 'MarkdownV2'
             })
         } if (msg.text === texts.keyboard.tarifs.pro.button) {
-            const {invoiceUrl} = await createPayment(subscriber.chatId, 1, 'standard' ,'UAH');
+            const planSettings = {
+                amount: 10,
+                label: 'standard',
+                products: {
+                    productName: ['Тариф PRO'],
+                    productCount: [1],
+                    productPrice: [10]
+                },
+                currency: 'EUR'
+            }
+            const {invoiceUrl} = await createPayment(subscriber.chatId, planSettings);
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.tarifs.pro.response, {
                 reply_markup: {
                     inline_keyboard: [
@@ -99,7 +109,17 @@ export async function startTelegramBot() {
                 parse_mode: 'MarkdownV2'
             })
         } else if (msg.text === texts.keyboard.tarifs.proPlus.button) {
-            const {invoiceUrl} = await createPayment(subscriber.chatId, 15, 'proPlus');
+            const planSettings = {
+                amount: 15,
+                label: 'proPlus',
+                products: {
+                    productName: ['Тариф PRO Plus'],
+                    productCount: [1],
+                    productPrice: [15]
+                },
+                currency: 'EUR'
+            }
+            const {invoiceUrl} = await createPayment(subscriber.chatId, planSettings);
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.tarifs.proPlus.response, {
                 reply_markup: {
                     inline_keyboard: [
@@ -121,6 +141,8 @@ export async function startTelegramBot() {
                     one_time_keyboard: false
                 }
             })
+        } else if (msg.text === texts.keyboard.support.button) {
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.support.response)
         } else if(msg.text === texts.keyboard.check.button) {
             const currentTime = Date.now();
             if (subscriber && subscriber.lastCheck && currentTime - subscriber.lastCheck < 5 * 60 * 1000) {
