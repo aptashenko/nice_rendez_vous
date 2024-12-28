@@ -27,7 +27,7 @@ export async function initializeDB() {
  * @returns {object|null} - Найденный подписчик или null, если подписчик не найден
  */
 db.getSubscriber = (chatId) => {
-    return db.data.subscribers.find((sub) => sub.chatId === chatId) || null;
+    return db.data.subscribers.find((sub) => sub.chatId === Number(chatId)) || null;
 };
 
 /**
