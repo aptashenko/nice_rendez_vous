@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 export function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -13,4 +15,10 @@ export function replacePlaceholders(template, data) {
     return template.replace(/{(\w+)}/g, (match, key) => {
         return key in data ? data[key] : match;
     });
+}
+
+export function encrypt(data, key) {
+    const hmac = crypto.createHmac('md5', key);
+    hmac.update(data);
+    return hmac.digest('hex');
 }
