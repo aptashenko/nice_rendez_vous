@@ -43,3 +43,8 @@ export const TARIFS_MENU = [
     [texts.keyboard.back.button],
     [texts.keyboard.support.button]
 ]
+
+export const PERSONAL_ACCOUNT_MENU = [
+    [texts.keyboard.pesonalAccount.info.button, texts.keyboard.pesonalAccount.changePlan.button],
+    [texts.keyboard.back.button],
+]

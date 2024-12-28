@@ -22,3 +22,13 @@ export function encrypt(data, key) {
     hmac.update(data);
     return hmac.digest('hex');
 }
+
+export function formatDate(timestamp) {
+    const date = new Date(timestamp);
+
+    const day = String(date.getDate()).padStart(2, '0'); // Получаем день с ведущим нулем
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяц от 0 до 11, добавляем 1
+    const year = date.getFullYear(); // Получаем год
+
+    return `${day}/${month}/${year}`; // Формируем строку в формате DD/MM/YYYY
+}

@@ -11,6 +11,8 @@ import {getSubscribers} from "./services/subscribersManager.js";
 import {encrypt} from "./services/utils.js";
 import { SECRET_KEY } from "./services/payments.js";
 
+// написать функцию которая проверяет закончилась ли подписка у пользователя
+
 app.get('/', (req, res) => {
     return res.send('<h2>it is working!</h2>'); // Предполагается, что существует файл hi.ejs в папке views
 });

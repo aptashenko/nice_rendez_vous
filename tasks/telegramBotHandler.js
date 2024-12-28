@@ -1,14 +1,14 @@
 import TelegramBot from "node-telegram-bot-api";
 import {
     ACTIVATE_BOT_MENU,
-    DEFAULT_USER_MENU, TARIFS_MENU,
+    DEFAULT_USER_MENU, PERSONAL_ACCOUNT_MENU, TARIFS_MENU,
     TELEGRAM_BOT_API,
     TELEGRAM_BOT_MENU,
 } from "../config/settings.js";
 import { addSubscriber, removeSubscriber } from "../services/subscribersManager.js";
 import {checkWebsite} from "./checkWebsite.js";
 import { db } from "../services/database.js";
-import {formatTime, replacePlaceholders} from "../services/utils.js";
+import {formatDate, formatTime, replacePlaceholders} from "../services/utils.js";
 import { readFile } from 'fs/promises';
 import {createPayment} from "../services/payments.js";
 export let TELEGRAM_BOT;
@@ -78,7 +78,7 @@ export async function startTelegramBot() {
         } else if (msg.text === texts.keyboard.description_subscription.button) {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.description_subscription.response, {
                 reply_markup: {
-                    keyboard: TARIFS_MENU,
+                    keyboard: subscriber.status === 'free' ? TARIFS_MENU : PERSONAL_ACCOUNT_MENU,
                     resize_keyboard: true,
                 },
                 parse_mode: 'MarkdownV2'
@@ -141,6 +141,10 @@ export async function startTelegramBot() {
                     one_time_keyboard: false
                 }
             })
+        } else if (msg.text === texts.keyboard.pesonalAccount.info.button) {
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: formatDate(subscriber.subscription_date)}))
+        } else if (msg.text === texts.keyboard.pesonalAccount.changePlan.button) {
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.pesonalAccount.changePlan.response)
         } else if (msg.text === texts.keyboard.support.button) {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.support.response)
         } else if(msg.text === texts.keyboard.check.button) {
