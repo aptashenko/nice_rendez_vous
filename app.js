@@ -6,8 +6,44 @@ import { checkWebsite } from "./tasks/checkWebsite.js";
 import { initializeDB } from './services/database.js';
 import {sendNotification, startTelegramBot} from "./tasks/telegramBotHandler.js";
 import {getSubscribers} from "./services/subscribersManager.js";
-import {createPayment} from "./services/payments.js";
+import {encrypt} from "./services/utils.js";
+import { SECRET_KEY } from "./services/payments.js";
 
+app.post('/wayforpay-callback', (req, res) => {
+    const data = req.body;
+    console.log('Полученные данные:', data);
+
+    // Проверка подписи
+    const signature = data.signature;
+    const stringToSign = [
+        data.orderReference,
+        data.amount,
+        data.currency,
+        data.authCode,
+        data.cardPan,
+        data.transactionStatus,
+        data.reasonCode
+    ].join(';');
+
+    const calculatedSignature = encrypt(stringToSign, SECRET_KEY)
+
+    if (calculatedSignature !== signature) {
+        console.error('Неверная подпись!');
+        return res.status(400).send('Invalid signature');
+    }
+
+    // Обработка данных
+    if (data.transactionStatus === 'Approved') {
+        console.log('Платеж успешно завершен!');
+        console.log(data)
+    } else {
+        console.log('Платеж отклонен или находится в ожидании');
+        // Логика обработки ошибок или ожидания
+    }
+
+    // Возвращаем подтверждение
+    res.json({ reason: 'OK' });
+});
 
 (async () => {
     try {

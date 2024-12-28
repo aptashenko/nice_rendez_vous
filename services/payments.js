@@ -1,5 +1,6 @@
 import axios from 'axios'
 import crypto from 'crypto';
+import {encrypt} from "./utils.js";
 
 const BASE_URL = 'https://api.wayforpay.com/api';
 export const SECRET_KEY = process.env.WAY_FOR_PAY_KEY;
@@ -33,10 +34,7 @@ export const createPayment = async (id, amount, currency = 'EUR') => {
         paymentData.productCount[0],
     ].join(';')
 
-    const hmac = crypto.createHmac('md5', SECRET_KEY);
-
-    hmac.update(stringifyData);
-    const hash = hmac.digest('hex');
+    const hash = encrypt(stringifyData, SECRET_KEY)
 
     const payload = {
         ...wayforpaySettings,
