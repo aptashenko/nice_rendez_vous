@@ -30,5 +30,11 @@ export function formatDate(timestamp) {
     const month = String(date.getMonth() + 1).padStart(2, '0'); // Месяц от 0 до 11, добавляем 1
     const year = date.getFullYear(); // Получаем год
 
-    return `${day}/${month}/${year}`; // Формируем строку в формате DD/MM/YYYY
+    return `${day}.${month}.${year}`; // Формируем строку в формате DD.MM.YYYY
+}
+
+export function addMonthToDate(timestamp) {
+    const date = new Date(timestamp); // Преобразуем в объект Date
+    date.setMonth(date.getMonth() + 1); // Добавляем один месяц
+    return date.getTime(); // Возвращаем timestamp
 }

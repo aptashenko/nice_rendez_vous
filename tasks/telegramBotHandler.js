@@ -1,10 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
-import {
-    ACTIVATE_BOT_MENU,
-    DEFAULT_USER_MENU, PERSONAL_ACCOUNT_MENU, TARIFS_MENU,
-    TELEGRAM_BOT_API,
-    TELEGRAM_BOT_MENU,
-} from "../config/settings.js";
+import { SHCEDULE_DELAY, TELEGRAM_BOT_API } from "../config/settings.js";
+import { ACTIVATE_BOT_MENU, DEFAULT_USER_MENU, PERSONAL_ACCOUNT_MENU, TARIFS_MENU, TELEGRAM_BOT_MENU } from "../config/buttons-settings.js"
 import { addSubscriber, removeSubscriber } from "../services/subscribersManager.js";
 import {checkWebsite} from "./checkWebsite.js";
 import { db } from "../services/database.js";
@@ -45,7 +41,7 @@ export async function startTelegramBot() {
             })
 
         } else if(msg.text === '/activate') {
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.main.response, {
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.menu.main.response, {delay: subscriber.status === 'free' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY}), {
                 reply_markup: {
                     keyboard: ACTIVATE_BOT_MENU(subscriber.showNegativeNotifications),
                     resize_keyboard: true,
@@ -142,7 +138,12 @@ export async function startTelegramBot() {
                 }
             })
         } else if (msg.text === texts.keyboard.pesonalAccount.info.button) {
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: formatDate(subscriber.subscription_date)}))
+            await TELEGRAM_BOT.sendMessage(
+                msg.chat.id,
+                replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: formatDate(subscriber.subscription_date), id: subscriber.chatId},
+                {parse_mode: 'MarkdownV2'}
+            )
+          )
         } else if (msg.text === texts.keyboard.pesonalAccount.changePlan.button) {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.pesonalAccount.changePlan.response)
         } else if (msg.text === texts.keyboard.support.button) {
