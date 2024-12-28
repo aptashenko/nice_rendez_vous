@@ -24,6 +24,15 @@
       "role": "user",
       "lastCheck": "",
       "showNegativeNotifications": true
+    },
+    {
+      "chatId": 925166677,
+      "status": "free",
+      "created_at": 1735396682772,
+      "subscription_date": "",
+      "role": "user",
+      "lastCheck": "",
+      "showNegativeNotifications": true
     }
   ]
 }
