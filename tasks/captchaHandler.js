@@ -6,7 +6,7 @@ export async function handleCaptcha(page) {
        await page.waitForSelector('img.BDC_CaptchaImage', { timeout: 10000 }); // Ждём до 10 секунд
        const captchaImageElement = await page.$('img.BDC_CaptchaImage');
 
-       await new Promise((resolve) => setTimeout(resolve, 2000));
+       await new Promise((resolve) => setTimeout(resolve, 5000));
 
        const imagePath = 'captcha.jpg';
        await captchaImageElement.screenshot({ path: imagePath });

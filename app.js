@@ -78,7 +78,7 @@ app.post('/wayforpay-callback', (req, res) => {
         console.log("Telegram-бот запущен.");
 
         // Периодическая проверка для всех подписчиков
-        schedule.scheduleJob('*/10 * * * *', async () => {
+        schedule.scheduleJob('*/5 * * * *', async () => {
             console.log("Периодическая проверка сайта...");
             const subscribers = await getSubscribers();
             const {status: messageStatus, text: messageText} = await checkWebsite();

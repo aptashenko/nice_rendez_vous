@@ -15,6 +15,15 @@
       "subscription_date": null,
       "role": "user",
       "showNegativeNotifications": true
+    },
+    {
+      "chatId": 1120584277,
+      "status": "free",
+      "created_at": 1735388164312,
+      "subscription_date": "",
+      "role": "user",
+      "lastCheck": "",
+      "showNegativeNotifications": true
     }
   ]
 }
