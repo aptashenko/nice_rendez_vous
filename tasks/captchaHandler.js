@@ -1,6 +1,6 @@
 import { solveCaptcha } from '../services/captchaSolver.js';
 import { SEARCH_PHRASE, API_KEY } from '../config/settings.js';
-import fs from 'node:fs'
+
 export async function handleCaptcha(page) {
    try {
        await page.waitForSelector('img.BDC_CaptchaImage', { timeout: 10000 }); // Ждём до 10 секунд
