@@ -6,6 +6,7 @@ import { checkWebsite } from "./tasks/checkWebsite.js";
 import { initializeDB } from './services/database.js';
 import {sendNotification, startTelegramBot} from "./tasks/telegramBotHandler.js";
 import {getSubscribers} from "./services/subscribersManager.js";
+import {createPayment} from "./services/payments.js";
 
 
 (async () => {

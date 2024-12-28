@@ -7,7 +7,7 @@
       "subscription_date": null,
       "role": "user",
       "lastCheck": 1735216072705,
-      "showNegativeNotifications": false
+      "showNegativeNotifications": true
     },
     {
       "chatId": 436551739,
