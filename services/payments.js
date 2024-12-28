@@ -4,16 +4,17 @@ import {encrypt} from "./utils.js";
 
 const BASE_URL = 'https://api.wayforpay.com/api';
 export const SECRET_KEY = process.env.WAY_FOR_PAY_KEY;
-export const createPayment = async (id, amount, currency = 'EUR') => {
+export const createPayment = async (id, amount, plan, currency = 'EUR') => {
     const wayforpaySettings = {
         transactionType: 'CREATE_INVOICE',
         merchantAccount: 'test_merch_n1',
         merchantDomainName: 'utprozorro.com.ua',
         apiVersion: '1',
+        serviceUrl: 'https://7dac-2a02-8440-d400-6d32-69b9-ca2c-9281-1fea.ngrok-free.app/wayforpay-callback'
     }
 
     const paymentData = {
-        orderReference: `ORDER-${id}-${Date.now()}`,
+        orderReference: `ORDER__${plan}__${id}__${Date.now()}`,
         orderDate: Date.now(),
         amount,
         currency,
@@ -44,7 +45,7 @@ export const createPayment = async (id, amount, currency = 'EUR') => {
 
     try {
         const { data, status } = await axios.post(BASE_URL, payload);
-        console.log(data)
+        if (status === 200) return data
     } catch (err) {
         console.error(err)
     }

@@ -1,7 +1,7 @@
 export const usersStatus = {
     free: 'free',
     standard: 'standard',
-    pro: 'pro'
+    proPlus: 'proPlus'
 }
 
 export const usersRoles = {

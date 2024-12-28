@@ -10,6 +10,7 @@ import {checkWebsite} from "./checkWebsite.js";
 import { db } from "../services/database.js";
 import {formatTime, replacePlaceholders} from "../services/utils.js";
 import { readFile } from 'fs/promises';
+import {createPayment} from "../services/payments.js";
 export let TELEGRAM_BOT;
 
 const texts = JSON.parse(await readFile('./config/texts.json', 'utf-8'));
@@ -83,9 +84,35 @@ export async function startTelegramBot() {
                 parse_mode: 'MarkdownV2'
             })
         } if (msg.text === texts.keyboard.tarifs.pro.button) {
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.tarifs.pro.response)
+            const {invoiceUrl} = await createPayment(subscriber.chatId, 1, 'standard' ,'UAH');
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.tarifs.pro.response, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                          {
+                            text: texts.keyboard.buy.button,
+                            url: invoiceUrl
+                          }
+                        ]
+                    ]
+                },
+                parse_mode: 'MarkdownV2'
+            })
         } else if (msg.text === texts.keyboard.tarifs.proPlus.button) {
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.tarifs.proPlus.response)
+            const {invoiceUrl} = await createPayment(subscriber.chatId, 15, 'proPlus');
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.tarifs.proPlus.response, {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            {
+                                text: texts.keyboard.buy.button,
+                                url: invoiceUrl
+                            }
+                        ]
+                    ]
+                },
+                parse_mode: 'MarkdownV2'
+            })
         } else if (msg.text === texts.keyboard.back.button) {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.back.response, {
                 reply_markup: {

@@ -1,5 +1,7 @@
 import express from 'express';
 const app = express();
+import { db } from "./services/database.js";
+app.use(express.urlencoded({ extended: true }));
 
 import schedule from 'node-schedule';
 import { checkWebsite } from "./tasks/checkWebsite.js";
@@ -9,40 +11,60 @@ import {getSubscribers} from "./services/subscribersManager.js";
 import {encrypt} from "./services/utils.js";
 import { SECRET_KEY } from "./services/payments.js";
 
+app.get('/', (req, res) => {
+    return res.send('<h2>it is working!</h2>'); // Предполагается, что существует файл hi.ejs в папке views
+});
+
 app.post('/wayforpay-callback', (req, res) => {
-    const data = req.body;
-    console.log('Полученные данные:', data);
+    try {
+        // Извлечение строки JSON из ключа объекта
+        const data = Object.keys(req.body)[0] + '[]}';
 
-    // Проверка подписи
-    const signature = data.signature;
-    const stringToSign = [
-        data.orderReference,
-        data.amount,
-        data.currency,
-        data.authCode,
-        data.cardPan,
-        data.transactionStatus,
-        data.reasonCode
-    ].join(';');
+        const parsedData = JSON.parse(data);
+        // Логируем распарсенные данные
+        console.log('Распарсенные данные:', parsedData);
 
-    const calculatedSignature = encrypt(stringToSign, SECRET_KEY)
+        // Проверка подписи
+        const signature = parsedData.merchantSignature;
 
-    if (calculatedSignature !== signature) {
-        console.error('Неверная подпись!');
-        return res.status(400).send('Invalid signature');
+        console.log('Подпись: ', signature)
+
+        const stringToSign = [
+            parsedData.merchantAccount,
+            parsedData.orderReference,
+            parsedData.amount,
+            parsedData.currency,
+            parsedData.authCode,
+            parsedData.cardPan,
+            parsedData.transactionStatus,
+            parsedData.reasonCode
+        ].join(';');
+
+        const calculatedSignature = encrypt(stringToSign, SECRET_KEY)
+
+        if (calculatedSignature !== signature) {
+            console.error('Неверная подпись!');
+            return res.status(400).send('Invalid signature');
+        }
+
+        // Обработка данных
+        if (parsedData.transactionStatus === 'Approved') {
+            console.log('Платеж успешно завершен!');
+            const [_, plan, chatId, other] = parsedData.orderReference.split('__');
+            const subscriber = db.getSubscriber(chatId);
+
+            db.updateSubscriber(subscriber.chatId, {status: plan, subscription_date: Date.now()})
+
+            console.log(subscriber)
+        } else {
+            console.log('Платеж отклонен или находится в ожидании');
+        }
+        // Отправляем подтверждение
+        res.json({ status: 'OK' });
+    } catch (error) {
+        console.error('Ошибка при обработке данных:', error.message);
+        res.status(400).json({ error: 'Invalid data format' });
     }
-
-    // Обработка данных
-    if (data.transactionStatus === 'Approved') {
-        console.log('Платеж успешно завершен!');
-        console.log(data)
-    } else {
-        console.log('Платеж отклонен или находится в ожидании');
-        // Логика обработки ошибок или ожидания
-    }
-
-    // Возвращаем подтверждение
-    res.json({ reason: 'OK' });
 });
 
 (async () => {
