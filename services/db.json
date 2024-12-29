@@ -26,6 +26,16 @@
       "role": "user",
       "lastCheck": null,
       "showNegativeNotifications": true
+    },
+    {
+      "chatId": 380485157,
+      "status": "standard",
+      "created_at": 1735499325932,
+      "subscription_date": null,
+      "role": "admin",
+      "lastCheck": null,
+      "showNegativeNotifications": true,
+      "nick": "tender_uk"
     }
   ]
 }
