@@ -20,12 +20,11 @@ export async function checkWebsite() {
                 return await checkWebsite()
             }
             if (isPhraseFound) {
-                console.log('Свободных слотов нет!')
-                log('Свободных слотов нет!', loggerMessageTypes.success);
-                return {status: 0, text: texts.unsuccess}
-            } else {
                 log('Есть свободные слоты', loggerMessageTypes.success);
                 return {status: 1, text: texts.success};
+            } else {
+                log('Свободных слотов нет!', loggerMessageTypes.success);
+                return {status: 0, text: texts.unsuccess}
             }
         } catch (error) {
             console.log(error)
