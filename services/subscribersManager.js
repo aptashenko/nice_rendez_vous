@@ -1,10 +1,10 @@
 import {db} from "./database.js";
 import {IUser, usersRoles} from "../types/index.js";
 
-export async function addSubscriber(chatId) {
+export async function addSubscriber(chatId, userName = 'unknown') {
     const existingSubscriber = db.data.subscribers.find((sub) => sub?.chatId === chatId);
     if (!existingSubscriber) {
-        db.data.subscribers.push({...IUser, chatId, created_at: Date.now(), role: usersRoles.user});
+        db.data.subscribers.push({...IUser, chatId, nick: userName, created_at: Date.now(), role: usersRoles.user});
         await db.write();
         console.log(`Добавлен новый подписчик: ${chatId}`);
         return true
