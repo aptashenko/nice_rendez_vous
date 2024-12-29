@@ -125,12 +125,12 @@ export async function startTelegramBot() {
 
         } else if (msg.text === texts.keyboard.description_subscription.button) {
             const planSettings = {
-                amount: 10,
+                amount: 1,
                 label: 'standard',
                 products: {
                     productName: ['Допомогти проекту'],
                     productCount: [1],
-                    productPrice: [10]
+                    productPrice: [1]
                 },
                 currency: 'EUR'
             }
