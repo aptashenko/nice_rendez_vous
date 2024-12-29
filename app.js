@@ -14,6 +14,7 @@ import { SHCEDULE_DELAY, SHCEDULE_DELAY_NIGHT } from "./config/settings.js";
 import {log} from "./services/logger.js";
 import {loggerMessageTypes} from "./types/index.js";
 import {readFile} from "fs/promises";
+import {transactions} from "./services/transactions.js";
 
 const texts = JSON.parse(await readFile('./config/texts.json', 'utf-8'));
 
@@ -60,16 +61,32 @@ app.post('/wayforpay-callback', async(req, res) => {
             return res.status(400).send('Invalid signature');
         }
 
+        if (transactions.isProcessed(parsedData.orderReference)) {
+            console.log(`Транзакция ${parsedData.orderReference} уже обработана.`);
+            return res.json({ status: 'OK' });
+        }
+
+        const [_, plan, chatId] = parsedData.orderReference.split('__');
+
+        if (parsedData.transactionStatus === 'Processing') {
+
+            // Отправляем уведомление пользователю
+            await sendNotification(chatId, texts.waitForPayment);
+            log('Ожидает подтверждения платежа', loggerMessageTypes.info, chatId)
+        }
+
         // Обработка данных
         if (parsedData.transactionStatus === 'Approved') {
-            const [_, plan, chatId, other] = parsedData.orderReference.split('__');
-            const subscriber = db.getSubscriber(chatId);
+            // Отмечаем транзакцию как обработанную
+            await transactions.markAsProcessed(parsedData.orderReference, {
+                status: 'Approved',
+                chatId
+            });
 
-            db.updateSubscriber(subscriber.chatId, {status: plan, subscription_date: addMonthToDate(Date.now())})
-            log('Оплатил подписку', loggerMessageTypes.success, subscriber.chatId)
-            await sendNotification(subscriber.chatId, texts.paymentSuccess)
+            db.updateSubscriber(chatId, {status: plan, subscription_date: addMonthToDate(Date.now())})
+            log('Оплатил подписку', loggerMessageTypes.success, chatId)
+            await sendNotification(chatId, texts.paymentSuccess)
         } else {
-            log('Ожидает подтверждения платежа', loggerMessageTypes.info, subscriber.chatId)
             console.log('Платеж отклонен или находится в ожидании');
         }
         // Отправляем подтверждение

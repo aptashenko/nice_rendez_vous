@@ -21,6 +21,7 @@ export async function checkWebsite() {
             }
             if (isPhraseFound) {
                 console.log('Свободных слотов нет!')
+                log('Свободных слотов нет!', loggerMessageTypes.success);
                 return {status: 0, text: texts.unsuccess}
             } else {
                 log('Есть свободные слоты', loggerMessageTypes.success);
