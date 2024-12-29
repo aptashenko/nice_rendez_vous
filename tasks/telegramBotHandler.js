@@ -87,7 +87,7 @@ export async function startTelegramBot() {
                 }
             })
         } else if (msg.text === texts.keyboard.description.button) {
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.description.response)
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.keyboard.description.response, {delay: subscriber?.status === 'free' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY}))
 
         } else if (msg.text === texts.keyboard.usersCount.button) {
             const allUsers = getSubscribers();
