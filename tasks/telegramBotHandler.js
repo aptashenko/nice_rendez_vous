@@ -52,7 +52,7 @@ export async function startTelegramBot() {
             await pause(1000);
             await TELEGRAM_BOT.sendMessage(chatId, texts.greetings2);
             await pause(1000);
-            await TELEGRAM_BOT.sendMessage(chatId, texts.greetings3, {parse_mode: 'MarkdownV2'});
+            await TELEGRAM_BOT.sendMessage(chatId, replacePlaceholders(texts.greetings3, {delay: subscriber?.status === 'free' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY}), {parse_mode: 'MarkdownV2'});
         } else if(msg.text === '/menu') {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.open.response, {
                 reply_markup: {
