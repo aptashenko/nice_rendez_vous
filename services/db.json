@@ -1,15 +1,6 @@
 {
   "subscribers": [
     {
-      "chatId": 380485157,
-      "status": "standard",
-      "created_at": 1735461108529,
-      "subscription_date": 1738147067372,
-      "role": "admin",
-      "lastCheck": null,
-      "showNegativeNotifications": true
-    },
-    {
       "chatId": 436551739,
       "status": "standard",
       "created_at": 1735462100817,
