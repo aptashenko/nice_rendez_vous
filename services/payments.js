@@ -37,15 +37,11 @@ export const createPayment = async (id, {amount, currency, products, label}) => 
 
     const hash = encrypt(stringifyData, SECRET_KEY)
 
-    console.log('resp1', SECRET_KEY)
-
     const payload = {
         ...wayforpaySettings,
         ...paymentData,
         merchantSignature: hash
     };
-
-    console.log(stringifyData, 'resp1')
 
     try {
         const { data, status } = await axios.post(BASE_URL, payload);

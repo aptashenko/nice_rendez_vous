@@ -7,6 +7,9 @@ export async function addSubscriber(chatId) {
         db.data.subscribers.push({...IUser, chatId, created_at: Date.now(), role: usersRoles.user});
         await db.write();
         console.log(`Добавлен новый подписчик: ${chatId}`);
+        return true
+    } else {
+        return false
     }
 }
 

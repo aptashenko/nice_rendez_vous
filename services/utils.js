@@ -38,3 +38,7 @@ export function addMonthToDate(timestamp) {
     date.setMonth(date.getMonth() + 1); // Добавляем один месяц
     return date.getTime(); // Возвращаем timestamp
 }
+
+export async function pause(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
