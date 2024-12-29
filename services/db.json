@@ -4,24 +4,33 @@
       "chatId": 380485157,
       "status": "standard",
       "created_at": 1735176605581,
-      "subscription_date": 1735356852994,
-      "role": "user",
+      "subscription_date": 1738114456449,
+      "role": "admin",
       "showNegativeNotifications": true
     },
     {
       "chatId": 436551739,
-      "status": "free",
+      "status": "standard",
       "created_at": 1735215798567,
       "subscription_date": null,
-      "role": "user",
+      "role": "admin",
       "showNegativeNotifications": true
     },
     {
       "chatId": 1120584277,
-      "status": "free",
+      "status": "standard",
       "created_at": 1735388164312,
-      "subscription_date": "",
-      "role": "user",
+      "subscription_date": null,
+      "role": "userPlus",
+      "lastCheck": "",
+      "showNegativeNotifications": true
+    },
+    {
+      "chatId": 925166677,
+      "status": "standard",
+      "created_at": 1735396682772,
+      "subscription_date": null,
+      "role": "userPlus",
       "lastCheck": "",
       "showNegativeNotifications": true
     }
