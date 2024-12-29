@@ -13,6 +13,9 @@ import { SECRET_KEY } from "./services/payments.js";
 import { SHCEDULE_DELAY } from "./config/settings.js";
 import {log} from "./services/logger.js";
 import {loggerMessageTypes} from "./types/index.js";
+import {readFile} from "fs/promises";
+
+const texts = JSON.parse(await readFile('./config/texts.json', 'utf-8'));
 
 const checkUsersSubscriptionDate = async () => {
     const subscribers = await getSubscribers();
@@ -29,7 +32,7 @@ app.get('/', (req, res) => {
     return res.send('<h2>it is working!</h2>'); // Предполагается, что существует файл hi.ejs в папке views
 });
 
-app.post('/wayforpay-callback', (req, res) => {
+app.post('/wayforpay-callback', async(req, res) => {
     try {
         // Извлечение строки JSON из ключа объекта
         const data = Object.keys(req.body)[0] + '[]}';
@@ -63,8 +66,10 @@ app.post('/wayforpay-callback', (req, res) => {
 
             db.updateSubscriber(subscriber.chatId, {status: plan, subscription_date: addMonthToDate(Date.now())})
             log('Оплатил подписку', loggerMessageTypes.success, subscriber.chatId)
+            await sendNotification(subscriber.chatId, texts.paymentSuccess)
         } else {
             log('Ожидает подтверждения платежа', loggerMessageTypes.info, subscriber.chatId)
+            await sendNotification(subscriber.chatId, texts.waitForPayment)
             console.log('Платеж отклонен или находится в ожидании');
         }
         // Отправляем подтверждение

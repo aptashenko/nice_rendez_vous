@@ -35,11 +35,16 @@ export const ACTIVATE_BOT_MENU = [
     [texts.keyboard.back.button]
 ]
 
-export const DEFAULT_USER_MENU = [
-    [texts.keyboard.description.button],
-    [texts.keyboard.description_subscription.button],
-    [texts.keyboard.support.button]
-]
+export const DEFAULT_USER_MENU = paid => {
+    return paid ? [
+        [texts.keyboard.description.button],
+        [texts.keyboard.support.button]
+    ] : [
+        [texts.keyboard.description.button],
+        [texts.keyboard.description_subscription.button],
+        [texts.keyboard.support.button]
+    ]
+}
 
 export const TARIFS_MENU = [
     [texts.keyboard.description_subscription.button],
