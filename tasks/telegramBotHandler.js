@@ -73,7 +73,7 @@ export async function startTelegramBot() {
         } else if (msg.text === '/account') {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.account.response, {
                 reply_markup: {
-                    keyboard: PERSONAL_ACCOUNT_MENU(subscriber.showNegativeNotifications),
+                    keyboard: PERSONAL_ACCOUNT_MENU(subscriber?.showNegativeNotifications),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
@@ -98,7 +98,7 @@ export async function startTelegramBot() {
             await db.updateSubscriber(chatId, { showNegativeNotifications: false });
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.notificationsOn.response, {
                 reply_markup: {
-                    keyboard: PERSONAL_ACCOUNT_MENU(subscriber.showNegativeNotifications),
+                    keyboard: PERSONAL_ACCOUNT_MENU(subscriber?.showNegativeNotifications),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
@@ -108,7 +108,7 @@ export async function startTelegramBot() {
             await db.updateSubscriber(chatId, { showNegativeNotifications: true });
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.notificationsOff.response, {
                 reply_markup: {
-                    keyboard: PERSONAL_ACCOUNT_MENU(subscriber.showNegativeNotifications),
+                    keyboard: PERSONAL_ACCOUNT_MENU(subscriber?.showNegativeNotifications),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
