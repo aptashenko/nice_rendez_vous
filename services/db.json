@@ -36,6 +36,26 @@
       "lastCheck": null,
       "showNegativeNotifications": true,
       "nick": "tender_uk"
+    },
+    {
+      "chatId": 1810190615,
+      "status": "free",
+      "created_at": 1735501742223,
+      "subscription_date": null,
+      "role": "user",
+      "lastCheck": null,
+      "showNegativeNotifications": true,
+      "nick": "unknown"
+    },
+    {
+      "chatId": 1015149218,
+      "status": "free",
+      "created_at": 1735502518619,
+      "subscription_date": null,
+      "role": "user",
+      "lastCheck": null,
+      "showNegativeNotifications": true,
+      "nick": "sheremeta_lesiaa"
     }
   ]
 }
