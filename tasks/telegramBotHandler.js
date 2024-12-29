@@ -56,7 +56,7 @@ export async function startTelegramBot() {
         } else if(msg.text === '/menu') {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.open.response, {
                 reply_markup: {
-                    keyboard: DEFAULT_USER_MENU,
+                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
@@ -65,7 +65,7 @@ export async function startTelegramBot() {
         } else if(msg.text === '/activate') {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.menu.main.response, {delay: subscriber.status === 'free' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY}), {
                 reply_markup: {
-                    keyboard: DEFAULT_USER_MENU,
+                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
@@ -117,7 +117,7 @@ export async function startTelegramBot() {
         } else if (msg.text === texts.keyboard.back.button) {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.back.response, {
                 reply_markup: {
-                    keyboard: DEFAULT_USER_MENU,
+                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
