@@ -6,6 +6,8 @@ node_modules/
 
 # Игнорировать файлы окружения
 *.env
+*.env.production
+*.env.development
 
 # Игнорировать кеши
 .DS_Store
