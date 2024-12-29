@@ -195,6 +195,6 @@ export async function startTelegramBot() {
     });
 }
 
-export async function sendNotification(chatId, message) {
-    await TELEGRAM_BOT.sendMessage(chatId, message);
+export async function sendNotification(chatId, message, options) {
+    await TELEGRAM_BOT.sendMessage(chatId, message, options);
 }

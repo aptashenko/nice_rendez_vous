@@ -15,6 +15,7 @@ import {log} from "./services/logger.js";
 import {loggerMessageTypes} from "./types/index.js";
 import {readFile} from "fs/promises";
 import {transactions} from "./services/transactions.js";
+import {DEFAULT_USER_MENU} from "./config/buttons-settings.js";
 
 const texts = JSON.parse(await readFile('./config/texts.json', 'utf-8'));
 
@@ -83,9 +84,17 @@ app.post('/wayforpay-callback', async(req, res) => {
                 chatId
             });
 
+            const subscriber = db.getSubscriber(Number(chatId))
+
             db.updateSubscriber(chatId, {status: plan, subscription_date: addMonthToDate(Date.now())})
             log('Оплатил подписку', loggerMessageTypes.success, chatId)
-            await sendNotification(chatId, texts.paymentSuccess)
+            await sendNotification(chatId, texts.paymentSuccess, {
+                reply_markup: {
+                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
+                    resize_keyboard: true,
+                    one_time_keyboard: false
+                }
+            })
         } else {
             console.log('Платеж отклонен или находится в ожидании');
         }
