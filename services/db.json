@@ -1,38 +1,5 @@
 {
   "subscribers": [
-    {
-      "chatId": 380485157,
-      "status": "standard",
-      "created_at": 1735176605581,
-      "subscription_date": 1738121044848,
-      "role": "admin",
-      "showNegativeNotifications": true
-    },
-    {
-      "chatId": 436551739,
-      "status": "standard",
-      "created_at": 1735215798567,
-      "subscription_date": 1738117270335,
-      "role": "admin",
-      "showNegativeNotifications": true
-    },
-    {
-      "chatId": 1120584277,
-      "status": "standard",
-      "created_at": 1735388164312,
-      "subscription_date": null,
-      "role": "userPlus",
-      "lastCheck": "",
-      "showNegativeNotifications": true
-    },
-    {
-      "chatId": 925166677,
-      "status": "standard",
-      "created_at": 1735396682772,
-      "subscription_date": null,
-      "role": "userPlus",
-      "lastCheck": "",
-      "showNegativeNotifications": true
-    }
+
   ]
 }

@@ -132,7 +132,7 @@ export async function startTelegramBot() {
                     productCount: [1],
                     productPrice: [10]
                 },
-                currency: 'EUR'
+                currency: 'UAH'
             }
             const {invoiceUrl} = await createPayment(subscriber.chatId, planSettings);
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.description_subscription.response, {
