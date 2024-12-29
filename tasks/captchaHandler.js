@@ -34,7 +34,7 @@ export async function handleCaptcha(page) {
        // Проверяем, есть ли искомая фраза
 
        const pageContent = await page.content();
-       log(JSON.stringify(content), loggerMessageTypes.info)
+       log(JSON.stringify(pageContent), loggerMessageTypes.info)
        return pageContent.includes(SEARCH_PHRASE);
    } catch (err) {
        log('Ошибка в обработке CAPTCHA: ' + JSON.stringify(err), loggerMessageTypes.error)

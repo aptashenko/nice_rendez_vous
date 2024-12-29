@@ -10,13 +10,16 @@ import {sendNotification, startTelegramBot} from "./tasks/telegramBotHandler.js"
 import {getSubscribers} from "./services/subscribersManager.js";
 import {addMonthToDate, encrypt} from "./services/utils.js";
 import { SECRET_KEY } from "./services/payments.js";
-import { SHCEDULE_DELAY } from "./config/settings.js";
+import { SHCEDULE_DELAY, SHCEDULE_DELAY_NIGHT } from "./config/settings.js";
 import {log} from "./services/logger.js";
 import {loggerMessageTypes} from "./types/index.js";
 import {readFile} from "fs/promises";
+import {transactions} from "./services/transactions.js";
+import {DEFAULT_USER_MENU} from "./config/buttons-settings.js";
 
 const texts = JSON.parse(await readFile('./config/texts.json', 'utf-8'));
 
+let delay;
 const checkUsersSubscriptionDate = async () => {
     const subscribers = await getSubscribers();
 
@@ -59,17 +62,40 @@ app.post('/wayforpay-callback', async(req, res) => {
             return res.status(400).send('Invalid signature');
         }
 
+        if (transactions.isProcessed(parsedData.orderReference)) {
+            console.log(`Транзакция ${parsedData.orderReference} уже обработана.`);
+            return res.json({ status: 'OK' });
+        }
+
+        const [_, plan, chatId] = parsedData.orderReference.split('__');
+
+        if (parsedData.transactionStatus === 'Processing') {
+
+            // Отправляем уведомление пользователю
+            await sendNotification(chatId, texts.waitForPayment);
+            log('Ожидает подтверждения платежа', loggerMessageTypes.info, chatId)
+        }
+
         // Обработка данных
         if (parsedData.transactionStatus === 'Approved') {
-            const [_, plan, chatId, other] = parsedData.orderReference.split('__');
-            const subscriber = db.getSubscriber(chatId);
+            // Отмечаем транзакцию как обработанную
+            await transactions.markAsProcessed(parsedData.orderReference, {
+                status: 'Approved',
+                chatId
+            });
 
-            db.updateSubscriber(subscriber.chatId, {status: plan, subscription_date: addMonthToDate(Date.now())})
-            log('Оплатил подписку', loggerMessageTypes.success, subscriber.chatId)
-            await sendNotification(subscriber.chatId, texts.paymentSuccess)
+            const subscriber = db.getSubscriber(Number(chatId))
+
+            db.updateSubscriber(chatId, {status: plan, subscription_date: addMonthToDate(Date.now())})
+            log('Оплатил подписку', loggerMessageTypes.success, chatId)
+            await sendNotification(chatId, texts.paymentSuccess, {
+                reply_markup: {
+                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
+                    resize_keyboard: true,
+                    one_time_keyboard: false
+                }
+            })
         } else {
-            log('Ожидает подтверждения платежа', loggerMessageTypes.info, subscriber.chatId)
-            await sendNotification(subscriber.chatId, texts.waitForPayment)
             console.log('Платеж отклонен или находится в ожидании');
         }
         // Отправляем подтверждение
@@ -98,14 +124,14 @@ const checkRendezVous = async () => {
             if (status === 'free' && !messageStatus) {
                 // Если статус "free" и сообщение негативное, отправляем сообщение раз в 10 минут
                 const currentMinute = new Date().getMinutes();
-                if (currentMinute % (SHCEDULE_DELAY * 2) === 0) {
+                if (currentMinute % (delay * 2) === 0) {
                     await sendNotification(chatId, messageText);
-                    console.log(`Уведомление отправлено (раз в ${SHCEDULE_DELAY * 2} мин) пользователю ${chatId}:`, messageText);
+                    console.log(`Уведомление отправлено (раз в ${delay * 2} мин) пользователю ${chatId}:`, messageText);
                 }
             } else {
                 // Для остальных статусов отправляем сообщение каждые 5 минут
                 await sendNotification(chatId, messageText);
-                console.log(`Уведомление отправлено (раз в ${SHCEDULE_DELAY} мин) пользователю ${chatId}:`, messageText);
+                console.log(`Уведомление отправлено (раз в ${delay} мин) пользователю ${chatId}:`, messageText);
             }
         } catch (err) {
             console.error(`Ошибка при отправке сообщения пользователю ${chatId}:`, err.message);
@@ -126,6 +152,30 @@ const checkRendezVous = async () => {
         // Периодическая проверка для всех подписчиков
         schedule.scheduleJob(`*/${SHCEDULE_DELAY} * * * *`, checkRendezVous);
         schedule.scheduleJob(`0 0 * * *`, checkUsersSubscriptionDate);
+        // Функция для определения текущего интервала
+        const scheduleJobs = () => {
+            const now = new Date();
+            const currentHour = now.getHours();
+
+            // Определяем задержку в зависимости от времени суток
+            delay = (currentHour >= 22 || currentHour < 6) ? SHCEDULE_DELAY_NIGHT : SHCEDULE_DELAY; // 120 минут (2 часа) ночью, 5 минут днём
+
+            // Сбрасываем предыдущие задания
+            schedule.gracefulShutdown();
+
+            // Устанавливаем новое расписание
+            schedule.scheduleJob(`*/${delay} * * * *`, checkRendezVous);
+            console.log(`Периодическая проверка установлена с интервалом ${delay} минут.`);
+        };
+
+        // Первоначальная установка расписания
+        scheduleJobs();
+
+        // Проверка времени каждый час для обновления расписания
+        schedule.scheduleJob('0 * * * *', scheduleJobs);
+
+        // Ежедневная проверка подписки пользователей
+        schedule.scheduleJob('0 0 * * *', checkUsersSubscriptionDate);
     } catch (err) {
         console.error("Ошибка при запуске бота:", err.message);
         log('Ошибка при запуске бота:', loggerMessageTypes.error)

@@ -40,7 +40,7 @@ db.getSubscriber = (chatId) => {
  * @returns {object|null} - Обновлённый подписчик или null, если подписчик не найден
  */
 db.updateSubscriber = async (chatId, updates) => {
-    const subscriber = db.data.subscribers.find((sub) => sub.chatId === chatId);
+    const subscriber = db.data.subscribers.find((sub) => Number(sub.chatId) === Number(chatId));
 
     if (subscriber) {
         // Обновляем данные подписчика
