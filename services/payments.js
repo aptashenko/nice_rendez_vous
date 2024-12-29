@@ -10,7 +10,7 @@ export const createPayment = async (id, {amount, currency, products, label}) => 
         merchantAccount: 'freelance_user_676d9a1c9555d',
         merchantDomainName: 't.me/rendezVousNice_bot',
         apiVersion: '1',
-        serviceUrl: 'https://e3d5-2a01-cb1d-95f-ca00-1902-9025-f656-5a46.ngrok-free.app/wayforpay-callback'
+        serviceUrl: 'https://1036-2a02-8440-c400-61b1-5cc6-3f07-8389-55bc.ngrok-free.app/wayforpay-callback'
     }
 
     const paymentData = {
