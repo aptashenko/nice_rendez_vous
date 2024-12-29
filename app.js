@@ -24,9 +24,9 @@ const checkUsersSubscriptionDate = async () => {
     const subscribers = await getSubscribers();
 
     for (const subscriber of subscribers) {
-        if (subscriber.subscription_date && subscriber.subscription_date > Date.now()) {
-            db.updateSubscriber(subscriber.chatId, {subscription_date: null, status: 'free'});
-            log(`Закончилась подписка`, loggerMessageTypes.info, subscriber.chatId)
+        if (subscriber?.subscription_date && subscriber?.subscription_date > Date.now()) {
+            db.updateSubscriber(subscriber?.chatId, {subscription_date: null, status: 'free'});
+            log(`Закончилась подписка`, loggerMessageTypes.info, subscriber?.chatId)
         }
     }
 }
@@ -90,7 +90,7 @@ app.post('/wayforpay-callback', async(req, res) => {
             log('Оплатил подписку', loggerMessageTypes.success, chatId)
             await sendNotification(chatId, texts.paymentSuccess, {
                 reply_markup: {
-                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
+                    keyboard: DEFAULT_USER_MENU(subscriber?.subscription_date),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }

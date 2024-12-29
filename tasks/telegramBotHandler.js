@@ -27,13 +27,13 @@ export async function startTelegramBot() {
     TELEGRAM_BOT.on("polling_error", err => console.log(err));
 
     TELEGRAM_BOT.on('message', async msg => {
-        const admins = getSubscribers().filter(user => user.role === 'admin');
+        const admins = getSubscribers().filter(user => user?.role === 'admin');
 
         const chatId = msg.chat.id;
 
         const subscriber = await db.getSubscriber(chatId); // Получить данные пользователя из базы
 
-        if (subscriber.role === 'admin') {
+        if (subscriber?.role === 'admin') {
             TELEGRAM_BOT.setMyCommands(TELEGRAM_BOT_MENU_ADMIN);
         }
 
@@ -43,7 +43,7 @@ export async function startTelegramBot() {
             const isNew = await addSubscriber(chatId);
             for (const admin of admins) {
                 if (isNew) {
-                    await TELEGRAM_BOT.sendMessage(admin.chatId, replacePlaceholders(texts.keyboard.usersCount.response2, {date: new Date(msg.date).toLocaleString(), nick: msg.from.username}));
+                    await TELEGRAM_BOT.sendMessage(admin?.chatId, replacePlaceholders(texts.keyboard.usersCount.response2, {date: new Date(msg.date).toLocaleString(), nick: msg.from.username}));
                     log(`Регистрация пользователя, ${msg.from.username}`, loggerMessageTypes.info, chatId);
                     log(`Регистрация пользователя ${chatId}`, loggerMessageTypes.info);
                 }
@@ -56,16 +56,16 @@ export async function startTelegramBot() {
         } else if(msg.text === '/menu') {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.open.response, {
                 reply_markup: {
-                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
+                    keyboard: DEFAULT_USER_MENU(subscriber?.subscription_date),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
             })
 
         } else if(msg.text === '/activate') {
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.menu.main.response, {delay: subscriber.status === 'free' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY}), {
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.menu.main.response, {delay: subscriber?.status === 'free' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY}), {
                 reply_markup: {
-                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
+                    keyboard: DEFAULT_USER_MENU(subscriber?.subscription_date),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
@@ -91,7 +91,7 @@ export async function startTelegramBot() {
 
         } else if (msg.text === texts.keyboard.usersCount.button) {
             const allUsers = getSubscribers();
-            const paidUsers = allUsers.filter(user => user.subscription_date)
+            const paidUsers = allUsers.filter(user => user?.subscription_date)
             await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.keyboard.usersCount.response, {sum: allUsers.length, paid: paidUsers.length}))
 
         } else if (msg.text === texts.keyboard.notificationsOn.button) {
@@ -117,7 +117,7 @@ export async function startTelegramBot() {
         } else if (msg.text === texts.keyboard.back.button) {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.back.response, {
                 reply_markup: {
-                    keyboard: DEFAULT_USER_MENU(subscriber.subscription_date),
+                    keyboard: DEFAULT_USER_MENU(subscriber?.subscription_date),
                     resize_keyboard: true,
                     one_time_keyboard: false
                 }
@@ -134,7 +134,7 @@ export async function startTelegramBot() {
                 },
                 currency: 'UAH'
             }
-            const {invoiceUrl} = await createPayment(subscriber.chatId, planSettings);
+            const {invoiceUrl} = await createPayment(subscriber?.chatId, planSettings);
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.description_subscription.response, {
                 reply_markup: {
                     inline_keyboard: [
@@ -148,12 +148,12 @@ export async function startTelegramBot() {
                 },
                 parse_mode: 'MarkdownV2'
             })
-            log('Натиснув на кнопку оплати', loggerMessageTypes.info, subscriber.chatId)
+            log('Натиснув на кнопку оплати', loggerMessageTypes.info, subscriber?.chatId)
         } else if (msg.text === texts.keyboard.pesonalAccount.info.button) {
-            const subscriptionDate = subscriber.subscription_date ? formatDate(subscriber.subscription_date) : 'бескінечності'
+            const subscriptionDate = subscriber?.subscription_date ? formatDate(subscriber?.subscription_date) : 'бескінечності'
             await TELEGRAM_BOT.sendMessage(
                 msg.chat.id,
-                replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: subscriptionDate, id: subscriber.chatId, planName: subscriber.status === 'free' ? 'Звичайний' : 'PRO'},
+                replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: subscriptionDate, id: subscriber?.chatId, planName: subscriber?.status === 'free' ? 'Звичайний' : 'PRO'},
                 {parse_mode: 'MarkdownV2'}
             )
           )
@@ -161,11 +161,11 @@ export async function startTelegramBot() {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.pesonalAccount.changePlan.response)
         } else if (msg.text === texts.keyboard.support.button) {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.support.response)
-            log('Натиснув на саппорт', loggerMessageTypes.info, subscriber.chatId)
+            log('Натиснув на саппорт', loggerMessageTypes.info, subscriber?.chatId)
         } else if(msg.text === texts.keyboard.check.button) {
             const currentTime = Date.now();
-            if (subscriber && subscriber.lastCheck && currentTime - subscriber.lastCheck < 5 * 60 * 1000) {
-                const remainingTime = Math.ceil((5 * 60 * 1000 - (currentTime - subscriber.lastCheck)) / 1000);
+            if (subscriber && subscriber.lastCheck && currentTime - subscriber?.lastCheck < 5 * 60 * 1000) {
+                const remainingTime = Math.ceil((5 * 60 * 1000 - (currentTime - subscriber?.lastCheck)) / 1000);
                 await TELEGRAM_BOT.sendMessage(chatId, replacePlaceholders(texts.keyboard.check.response2, {time: formatTime(remainingTime)}));
                 return;
             }
@@ -187,7 +187,7 @@ export async function startTelegramBot() {
     TELEGRAM_BOT.onText(/\/unsubscribe/, async (msg) => {
         const chatId = msg.chat.id;
 
-        const existingSubscriber = db.data.subscribers.find((sub) => sub.chatId === chatId);
+        const existingSubscriber = db.data.subscribers.find((sub) => sub?.chatId === chatId);
         if (existingSubscriber) {
             await removeSubscriber(chatId);
             await TELEGRAM_BOT.sendMessage(chatId, texts.keyboard.unsubscribe.response);

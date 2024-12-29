@@ -30,7 +30,7 @@ export async function initializeDB() {
  * @returns {object|null} - Найденный подписчик или null, если подписчик не найден
  */
 db.getSubscriber = (chatId) => {
-    return db.data.subscribers.find((sub) => sub.chatId === Number(chatId)) || null;
+    return db.data.subscribers.find((sub) => sub?.chatId === Number(chatId)) || null;
 };
 
 /**
@@ -40,7 +40,7 @@ db.getSubscriber = (chatId) => {
  * @returns {object|null} - Обновлённый подписчик или null, если подписчик не найден
  */
 db.updateSubscriber = async (chatId, updates) => {
-    const subscriber = db.data.subscribers.find((sub) => Number(sub.chatId) === Number(chatId));
+    const subscriber = db.data.subscribers.find((sub) => Number(sub?.chatId) === Number(chatId));
 
     if (subscriber) {
         // Обновляем данные подписчика
