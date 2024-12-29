@@ -66,13 +66,14 @@ app.post('/wayforpay-callback', async(req, res) => {
             console.log(`Транзакция ${parsedData.orderReference} уже обработана.`);
             return res.json({ status: 'OK' });
         }
-
         const [_, plan, chatId] = parsedData.orderReference.split('__');
-        await sendNotification(chatId, texts.waitForPayment);
-        log('Ожидает подтверждения платежа', loggerMessageTypes.info, chatId)
 
 
-        // Обработка данных
+        // if (parsedData.transactionStatus === 'InProcessing') {
+        //     await sendNotification(chatId, texts.waitForPayment);
+        //     log('Ожидает подтверждения платежа', loggerMessageTypes.info, chatId)
+        // }
+
         if (parsedData.transactionStatus === 'Approved') {
             // Отмечаем транзакцию как обработанную
             await transactions.markAsProcessed(parsedData.orderReference, {
