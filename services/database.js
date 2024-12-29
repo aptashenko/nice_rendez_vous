@@ -2,13 +2,16 @@ import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import {log} from "./logger.js";
+import {loggerMessageTypes} from "../types/index.js";
 
 // Восстанавливаем __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Инициализация базы данных
-const file = path.resolve(__dirname, 'db.json');
+const file = path.resolve(__dirname, 'db.json'); // PRODUCTION
+// const file = path.resolve(__dirname, 'db_test.json'); //DEVELOPING
 const adapter = new JSONFile(file);
 export const db = new Low(adapter);
 
@@ -43,6 +46,7 @@ db.updateSubscriber = async (chatId, updates) => {
         // Обновляем данные подписчика
         Object.assign(subscriber, updates);
         await db.write(); // Сохраняем изменения в файл
+        log(`Обновил данные: ${JSON.stringify(updates)}`, loggerMessageTypes.success, chatId);
         console.log(`Подписчик ${chatId} обновлён:`, updates);
         return subscriber;
     } else {

@@ -6,15 +6,23 @@ export const usersStatus = {
 
 export const usersRoles = {
     admin: 'admin',
+    superUser: 'superUser',
     user: 'user'
 }
 
+export const loggerMessageTypes = {
+    warning: 'warning',
+    success: 'success',
+    error: 'error',
+    info: 'info'
+}
+
 export const IUser =    {
-    chatId: "",
+    chatId: null,
     status: usersStatus.free,
-    created_at: "",
-    subscription_date: "",
-    role: "",
-    lastCheck: "",
+    created_at: null,
+    subscription_date: null,
+    role: usersRoles.user,
+    lastCheck: null,
     showNegativeNotifications: true
 }

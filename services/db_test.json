@@ -1,0 +1,13 @@
+{
+  "subscribers": [
+    {
+      "chatId": 380485157,
+      "status": "free",
+      "created_at": 1735426836307,
+      "subscription_date": "",
+      "role": "admin",
+      "lastCheck": "",
+      "showNegativeNotifications": true
+    }
+  ]
+}
