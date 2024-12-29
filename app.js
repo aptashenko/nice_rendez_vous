@@ -70,7 +70,6 @@ app.post('/wayforpay-callback', async(req, res) => {
             await sendNotification(subscriber.chatId, texts.paymentSuccess)
         } else {
             log('Ожидает подтверждения платежа', loggerMessageTypes.info, subscriber.chatId)
-            await sendNotification(subscriber.chatId, texts.waitForPayment)
             console.log('Платеж отклонен или находится в ожидании');
         }
         // Отправляем подтверждение
