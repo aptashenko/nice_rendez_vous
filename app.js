@@ -10,8 +10,8 @@ import {sendNotification, startTelegramBot} from "./tasks/telegramBotHandler.js"
 import {getSubscribers} from "./services/subscribersManager.js";
 import {addMonthToDate, encrypt} from "./services/utils.js";
 import { SECRET_KEY } from "./services/payments.js";
-import { SHCEDULE_DELAY } from "./config/settings.js";
-
+import { SHCEDULE_DELAY, SHCEDULE_DELAY_NIGHT } from "./config/settings.js";
+let delay;
 const checkUsersSubscriptionDate = async () => {
     const subscribers = await getSubscribers();
 
@@ -96,14 +96,14 @@ const checkRendezVous = async () => {
             if (status === 'free') {
                 // Если статус "free", отправляем сообщение раз в 10 минут
                 const currentMinute = new Date().getMinutes();
-                if (currentMinute % (SHCEDULE_DELAY * 2) === 0) {
+                if (currentMinute % (delay * 2) === 0) {
                     await sendNotification(chatId, messageText);
-                    console.log(`Уведомление отправлено (раз в ${SHCEDULE_DELAY * 2} мин) пользователю ${chatId}:`, messageText);
+                    console.log(`Уведомление отправлено (раз в ${delay * 2} мин) пользователю ${chatId}:`, messageText);
                 }
             } else {
                 // Для остальных статусов отправляем сообщение каждые 5 минут
                 await sendNotification(chatId, messageText);
-                console.log(`Уведомление отправлено (раз в ${SHCEDULE_DELAY} мин) пользователю ${chatId}:`, messageText);
+                console.log(`Уведомление отправлено (раз в ${delay} мин) пользователю ${chatId}:`, messageText);
             }
         } catch (err) {
             console.error(`Ошибка при отправке сообщения пользователю ${chatId}:`, err.message);
@@ -119,11 +119,33 @@ const checkRendezVous = async () => {
         // Запуск Telegram-бота
         await startTelegramBot();
         console.log("Telegram-бот запущен.");
-        // Периодическая проверка для всех подписчиков
-        schedule.scheduleJob(`*/${SHCEDULE_DELAY} * * * *`, checkRendezVous);
-        schedule.scheduleJob(`0 0 * * *`, checkUsersSubscriptionDate);
+        // Функция для определения текущего интервала
+        const scheduleJobs = () => {
+            const now = new Date();
+            const currentHour = now.getHours();
+
+            // Определяем задержку в зависимости от времени суток
+            delay = (currentHour >= 22 || currentHour < 6) ? SHCEDULE_DELAY_NIGHT : SHCEDULE_DELAY; // 120 минут (2 часа) ночью, 5 минут днём
+
+            // Сбрасываем предыдущие задания
+            schedule.gracefulShutdown();
+
+            // Устанавливаем новое расписание
+            schedule.scheduleJob(`*/${delay} * * * *`, checkRendezVous);
+            console.log(`Периодическая проверка установлена с интервалом ${delay} минут.`);
+        };
+
+        // Первоначальная установка расписания
+        scheduleJobs();
+
+        // Проверка времени каждый час для обновления расписания
+        schedule.scheduleJob('0 * * * *', scheduleJobs);
+
+        // Ежедневная проверка подписки пользователей
+        schedule.scheduleJob('0 0 * * *', checkUsersSubscriptionDate);
     } catch (err) {
         console.error("Ошибка при запуске бота:", err.message);
+        log('Ошибка при запуске бота:', loggerMessageTypes.error);
     }
 })();
 
