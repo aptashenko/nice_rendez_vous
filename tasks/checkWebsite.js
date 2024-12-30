@@ -1,5 +1,5 @@
 import {createBrowser, navigateToPage} from "../services/puppeteerManager.js";
-import {RETRY_LIMIT, CAPTCHA_PAGE_URL} from "../config/settings.js";
+import {RETRY_LIMIT, CAPTCHA_PAGE_URL} from "../config/config.js";
 import {handleCaptcha} from "./captchaHandler.js";
 import {log} from "../services/logger.js";
 import {readFile} from "fs/promises";

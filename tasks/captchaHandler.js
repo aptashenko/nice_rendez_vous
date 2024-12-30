@@ -1,5 +1,5 @@
 import { solveCaptcha } from '../services/captchaSolver.js';
-import { SEARCH_PHRASE, API_KEY } from '../config/settings.js';
+import { SEARCH_PHRASE, API_KEY } from '../config/config.js';
 import {log} from "../services/logger.js";
 import {loggerMessageTypes} from "../types/index.js";
 import {pause} from "../services/utils.js";

@@ -1,10 +1,18 @@
 import {db} from "./database.js";
 import {IUser, usersRoles} from "../types/index.js";
 
+function countTrialPeriod (days) {
+    const hours = days * 24;
+    const minutes = hours * 60;
+    const seconds = minutes * 60;
+    return seconds * 1000;
+}
+
 export async function addSubscriber(chatId, userName = 'unknown') {
     const existingSubscriber = db.data.subscribers.find((sub) => sub?.chatId === chatId);
+    const trialPeriod = countTrialPeriod(1);
     if (!existingSubscriber) {
-        db.data.subscribers.push({...IUser, chatId, nick: userName, created_at: Date.now(), role: usersRoles.user});
+        db.data.subscribers.push({...IUser, chatId, nick: userName, created_at: Date.now(), trial_ends: Date.now() + trialPeriod, role: usersRoles.user});
         await db.write();
         console.log(`Добавлен новый подписчик: ${chatId}`);
         return true

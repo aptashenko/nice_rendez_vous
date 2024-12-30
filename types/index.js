@@ -1,12 +1,6 @@
-export const usersStatus = {
-    free: 'free',
-    standard: 'standard',
-    proPlus: 'proPlus'
-}
-
 export const usersRoles = {
     admin: 'admin',
-    superUser: 'superUser',
+    moderator: 'moderator',
     user: 'user'
 }
 
@@ -19,10 +13,12 @@ export const loggerMessageTypes = {
 
 export const IUser =    {
     chatId: null,
-    status: usersStatus.free,
+    paid: false,
     created_at: null,
     subscription_date: null,
+    activated: false,
     role: usersRoles.user,
-    lastCheck: null,
+    nick: null,
+    trial_ends: null,
     showNegativeNotifications: true
 }

@@ -2,60 +2,69 @@
   "subscribers": [
     {
       "chatId": 436551739,
-      "status": "standard",
-      "created_at": 1735462100817,
+      "paid": false,
+      "created_at": 1735597999111,
       "subscription_date": null,
-      "role": "user",
-      "lastCheck": null,
-      "showNegativeNotifications": true
+      "activated": true,
+      "role": "moderator",
+      "showNegativeNotifications": true,
+      "nick": "unknown",
+      "trial_ends": 1735601599111
     },
     {
       "chatId": 925166677,
-      "status": "standard",
+      "paid": true,
       "created_at": 1735469794903,
-      "subscription_date": 1738148331701,
-      "role": "user",
-      "lastCheck": null,
-      "showNegativeNotifications": true
+      "subscription_date": null,
+      "activated": true,
+      "role": "moderator",
+      "showNegativeNotifications": true,
+      "nick": "unknown",
+      "trial_ends": 1735469794903
     },
     {
       "chatId": 5384707015,
-      "status": "free",
+      "paid": true,
       "created_at": 1735479268182,
       "subscription_date": null,
-      "role": "user",
-      "lastCheck": null,
-      "showNegativeNotifications": true
+      "activated": true,
+      "role": "moderator",
+      "showNegativeNotifications": true,
+      "nick": "unknown",
+      "trial_ends": 1735479268182
     },
     {
       "chatId": 380485157,
-      "status": "standard",
+      "paid": true,
       "created_at": 1735499325932,
       "subscription_date": null,
+      "activated": true,
       "role": "admin",
-      "lastCheck": null,
       "showNegativeNotifications": true,
-      "nick": "tender_uk"
+      "nick": "tender_uk",
+      "trial_ends": 1735499325932
     },
     {
       "chatId": 1810190615,
-      "status": "free",
+      "paid": true,
       "created_at": 1735501742223,
       "subscription_date": null,
+      "activated": true,
       "role": "user",
-      "lastCheck": null,
       "showNegativeNotifications": true,
-      "nick": "unknown"
+      "nick": "unknown",
+      "trial_ends": 1735501742223
     },
     {
       "chatId": 1015149218,
-      "status": "free",
+      "paid": true,
       "created_at": 1735502518619,
       "subscription_date": null,
+      "activated": true,
       "role": "user",
-      "lastCheck": null,
       "showNegativeNotifications": true,
-      "nick": "sheremeta_lesiaa"
+      "nick": "sheremeta_lesiaa",
+      "trial_ends": 1735502518619
     }
   ]
 }

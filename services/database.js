@@ -2,24 +2,15 @@ import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import fs from 'node:fs';
 import {log} from "./logger.js";
 import {loggerMessageTypes} from "../types/index.js";
-import dotenv from 'dotenv';
-if (fs.existsSync('.env.production')) {
-    dotenv.config({ path: '.env.production' });
-}
-
-if (fs.existsSync('.env')) {
-    dotenv.config();
-}
-
+import {DB_NAME} from "../config/config.js";
 // Восстанавливаем __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Инициализация базы данных
-const file = path.resolve(__dirname, process.env.USERS_DB_NAME)
+const file = path.resolve(__dirname, DB_NAME)
 const adapter = new JSONFile(file);
 export const db = new Low(adapter);
 
