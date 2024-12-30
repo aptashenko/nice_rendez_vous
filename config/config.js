@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import dotenv from "dotenv";
 
-const mode = 'dev'
+const mode = 'prod'
 
 const environment = {
     prod: '.env.production',
