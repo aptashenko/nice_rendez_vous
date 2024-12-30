@@ -4,16 +4,16 @@ import {
     ADMIN_MENU,
     DEFAULT_USER_MENU,
     PERSONAL_ACCOUNT_MENU,
-    TELEGRAM_BOT_MENU, TELEGRAM_BOT_MENU_ADMIN
+    TELEGRAM_BOT_MENU
 } from "../config/buttons-settings.js"
 import {addSubscriber, getSubscribers} from "../services/subscribersManager.js";
 import { db } from "../services/database.js";
 import {formatDate, pause, replacePlaceholders} from "../services/utils.js";
 import { readFile } from 'fs/promises';
-import {createPayment} from "../services/payments.js";
 import {log} from "../services/logger.js";
 import {loggerMessageTypes, usersRoles} from "../types/index.js";
 export let TELEGRAM_BOT;
+
 
 const texts = JSON.parse(await readFile('./config/texts.json', 'utf-8'));
 
@@ -30,6 +30,7 @@ export async function startTelegramBot() {
         const chatId = msg.chat.id;
 
         const subscriber = await db.getSubscriber(chatId); // Получить данные пользователя из базы
+        const checkingDelay = subscriber.role === 'user' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY;
 
         // Добавляем пользователя в подписчики
 
@@ -46,7 +47,7 @@ export async function startTelegramBot() {
             await pause(1000);
             await TELEGRAM_BOT.sendMessage(chatId, texts.greetings2);
             await pause(1000);
-            await TELEGRAM_BOT.sendMessage(chatId, replacePlaceholders(texts.greetings3, {delay: SHCEDULE_DELAY}), {parse_mode: 'MarkdownV2'});
+            await TELEGRAM_BOT.sendMessage(chatId, replacePlaceholders(texts.greetings3, {delay: checkingDelay}), {parse_mode: 'MarkdownV2'});
         } else if(msg.text === '/menu') {
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.open.response, {
                 reply_markup: {
@@ -59,7 +60,7 @@ export async function startTelegramBot() {
         } else if(msg.text === '/activate') {
             await db.updateSubscriber(chatId, { activated: true });
 
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.menu.main.response, {delay: SHCEDULE_DELAY}), {
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.menu.main.response, {delay: checkingDelay}), {
                 reply_markup: {
                     keyboard: DEFAULT_USER_MENU(subscriber?.paid),
                     resize_keyboard: true,
@@ -87,7 +88,7 @@ export async function startTelegramBot() {
                 })
             }
         } else if (msg.text === texts.keyboard.description.button) {
-            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.keyboard.description.response, {delay: SHCEDULE_DELAY}))
+            await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.keyboard.description.response, {delay: checkingDelay}))
 
         } else if (msg.text === texts.keyboard.usersCount.button) {
             const allUsers = getSubscribers();
