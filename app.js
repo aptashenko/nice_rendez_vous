@@ -94,8 +94,11 @@ const checkUnsubscribedUser = async () => {
         subscription_date
     } of subscribers) {
         if (activated) {
+            if (!subscription_date && Date.now() > trial_ends) {
+                log(`Конец триала`, loggerMessageTypes.info, chatId)
+            }
             if (subscription_date && subscription_date > Date.now()) {
-                db.updateSubscriber(chatId, {subscription_date: null, paid: false});
+                await db.updateSubscriber(chatId, {subscription_date: null, paid: false});
                 log(`Закончилась подписка`, loggerMessageTypes.info, chatId)
             }
             if (!paid && Date.now() > trial_ends) {

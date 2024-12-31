@@ -12,6 +12,8 @@ import {formatDate, pause, replacePlaceholders} from "../services/utils.js";
 import { readFile } from 'fs/promises';
 import {log} from "../services/logger.js";
 import {loggerMessageTypes, usersRoles} from "../types/index.js";
+import {createPayment} from "../services/payments.js";
+import {DEFAULT_PRICE} from "../config/prices.js";
 export let TELEGRAM_BOT;
 
 
@@ -31,6 +33,23 @@ export async function startTelegramBot() {
 
         const subscriber = await db.getSubscriber(chatId); // Получить данные пользователя из базы
         const checkingDelay = subscriber.role === 'user' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY;
+        const trialMode = Date.now() <= subscriber.trial_ends;
+        let planName;
+        if (!subscriber?.paid && trialMode) {
+            planName = 'Trial активний'
+        } else if (subscriber.paid) {
+            planName = 'PRO+'
+        } else {
+            planName = 'Не проплачено'
+        }
+        let subscriptionDate;
+        if (subscriber?.subscription_date) {
+            subscriptionDate = formatDate(subscriber?.subscription_date)
+        } else if (!subscriber?.subscription_date && trialMode) {
+            subscriptionDate = formatDate(subscriber.trial_ends)
+        } else {
+            subscriptionDate = 'бескінечності'
+        }
 
         // Добавляем пользователя в подписчики
 
@@ -41,6 +60,7 @@ export async function startTelegramBot() {
                     await TELEGRAM_BOT.sendMessage(admin?.chatId, replacePlaceholders(texts.keyboard.usersCount.response2, {date: new Date(Date.now()).toLocaleString(), nick: msg.from.username || 'unknown'}));
                     log(`Регистрация пользователя, ${msg.from.username}`, loggerMessageTypes.info, chatId);
                     log(`Регистрация пользователя ${chatId}`, loggerMessageTypes.info);
+                    log(`Старт триала`, loggerMessageTypes.info, chatId)
                 }
             }
             await TELEGRAM_BOT.sendMessage(chatId, texts.greetings);
@@ -95,6 +115,21 @@ export async function startTelegramBot() {
             const paidUsers = allUsers.filter(user => user?.subscription_date)
             await TELEGRAM_BOT.sendMessage(msg.chat.id, replacePlaceholders(texts.keyboard.usersCount.response, {sum: allUsers.length, paid: paidUsers.length}))
 
+        } else if (msg.text === texts.keyboard.description_subscription.button) {
+            const { invoiceUrl } = await createPayment(chatId, DEFAULT_PRICE);
+            await sendNotification(chatId, replacePlaceholders(texts.keyboard.description_subscription.response, {price: DEFAULT_PRICE.amount}), {
+                reply_markup: {
+                    inline_keyboard: [
+                        [
+                            {
+                                text: texts.keyboard.buy.button,
+                                url: invoiceUrl
+                            }
+                        ]
+                    ]
+                },
+                parse_mode: 'MarkdownV2'
+            });
         } else if (msg.text === texts.keyboard.notificationsOn.button) {
             await db.updateSubscriber(chatId, { showNegativeNotifications: false });
             await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.keyboard.notificationsOn.response, {
@@ -125,10 +160,9 @@ export async function startTelegramBot() {
             })
 
         } else if (msg.text === texts.keyboard.pesonalAccount.info.button) {
-            const subscriptionDate = subscriber?.subscription_date ? formatDate(subscriber?.subscription_date) : 'бескінечності'
             await TELEGRAM_BOT.sendMessage(
                 msg.chat.id,
-                replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: subscriptionDate, id: subscriber?.chatId, planName: !subscriber?.paid ? 'Trial' : 'PRO+'},
+                replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: subscriptionDate, id: subscriber?.chatId, planName: planName, active: subscriber.activated ? 'Активна' : 'Не активна'},
                 {parse_mode: 'MarkdownV2'}
             )
           )

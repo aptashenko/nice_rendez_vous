@@ -2,14 +2,14 @@
   "subscribers": [
     {
       "chatId": 380485157,
-      "paid": true,
+      "paid": false,
       "created_at": 1735499325932,
       "subscription_date": null,
       "activated": true,
-      "role": "admin",
+      "role": "user",
       "showNegativeNotifications": true,
       "nick": "tender_uk",
-      "trial_ends": 1735499325932
+      "trial_ends": 1735627838117
     }
   ]
 }

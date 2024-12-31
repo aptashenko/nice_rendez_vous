@@ -1,10 +1,10 @@
 export const DEFAULT_PRICE = {
-    amount: 50,
+    amount: 30,
     label: 'standard',
     products: {
         productName: ['Підписка на rendezVousNice_bot'],
         productCount: [1],
-        productPrice: [50]
+        productPrice: [30]
     },
     currency: 'EUR'
 }

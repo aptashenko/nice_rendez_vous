@@ -1,17 +1,6 @@
 {
   "subscribers": [
     {
-      "chatId": 436551739,
-      "paid": false,
-      "created_at": 1735597999111,
-      "subscription_date": null,
-      "activated": true,
-      "role": "moderator",
-      "showNegativeNotifications": true,
-      "nick": "unknown",
-      "trial_ends": 1735601599111
-    },
-    {
       "chatId": 925166677,
       "paid": true,
       "created_at": 1735469794903,
