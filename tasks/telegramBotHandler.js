@@ -32,12 +32,12 @@ export async function startTelegramBot() {
         const chatId = msg.chat.id;
 
         const subscriber = await db.getSubscriber(chatId); // Получить данные пользователя из базы
-        const checkingDelay = subscriber.role === 'user' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY;
-        const trialMode = Date.now() <= subscriber.trial_ends;
+        const checkingDelay = subscriber?.role === 'user' ? SHCEDULE_DELAY * 2 : SHCEDULE_DELAY;
+        const trialMode = Date.now() <= subscriber?.trial_ends;
         let planName;
         if (!subscriber?.paid && trialMode) {
             planName = 'Trial активний'
-        } else if (subscriber.paid) {
+        } else if (subscriber?.paid) {
             planName = 'PRO+'
         } else {
             planName = 'Не проплачено'
@@ -46,7 +46,7 @@ export async function startTelegramBot() {
         if (subscriber?.subscription_date) {
             subscriptionDate = formatDate(subscriber?.subscription_date)
         } else if (!subscriber?.subscription_date && trialMode) {
-            subscriptionDate = formatDate(subscriber.trial_ends)
+            subscriptionDate = formatDate(subscriber?.trial_ends)
         } else {
             subscriptionDate = 'бескінечності'
         }
@@ -96,7 +96,7 @@ export async function startTelegramBot() {
                 }
             })
         } else if (msg.text === '/admin') {
-            if (subscriber.role !== usersRoles.admin) {
+            if (subscriber?.role !== usersRoles.admin) {
                 await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.accessDenied)
             } else {
                 await TELEGRAM_BOT.sendMessage(msg.chat.id, texts.menu.admin.response, {
@@ -162,7 +162,7 @@ export async function startTelegramBot() {
         } else if (msg.text === texts.keyboard.pesonalAccount.info.button) {
             await TELEGRAM_BOT.sendMessage(
                 msg.chat.id,
-                replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: subscriptionDate, id: subscriber?.chatId, planName: planName, active: subscriber.activated ? 'Активна' : 'Не активна'},
+                replacePlaceholders(texts.keyboard.pesonalAccount.info.response, {date: subscriptionDate, id: subscriber?.chatId, planName: planName, active: subscriber?.activated ? 'Активна' : 'Не активна'},
                 {parse_mode: 'MarkdownV2'}
             )
           )

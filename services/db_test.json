@@ -3,13 +3,13 @@
     {
       "chatId": 380485157,
       "paid": false,
-      "created_at": 1735499325932,
+      "created_at": 1735629569556,
       "subscription_date": null,
-      "activated": true,
+      "activated": false,
       "role": "user",
-      "showNegativeNotifications": true,
       "nick": "tender_uk",
-      "trial_ends": 1735627838117
+      "trial_ends": 1735715969556,
+      "showNegativeNotifications": true
     }
   ]
 }
