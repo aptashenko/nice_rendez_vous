@@ -61,7 +61,7 @@
       "created_at": 1735629684432,
       "subscription_date": null,
       "activated": true,
-      "role": "user",
+      "role": "moderator",
       "nick": "al_malikkova",
       "trial_ends": 1735716084432,
       "showNegativeNotifications": true
