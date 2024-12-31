@@ -29,7 +29,7 @@
       "subscription_date": null,
       "activated": true,
       "role": "admin",
-      "showNegativeNotifications": true,
+      "showNegativeNotifications": false,
       "nick": "tender_uk",
       "trial_ends": 1735499325932
     },
@@ -54,6 +54,17 @@
       "showNegativeNotifications": true,
       "nick": "sheremeta_lesiaa",
       "trial_ends": 1735502518619
+    },
+    {
+      "chatId": 436551739,
+      "paid": false,
+      "created_at": 1735629684432,
+      "subscription_date": null,
+      "activated": true,
+      "role": "user",
+      "nick": "al_malikkova",
+      "trial_ends": 1735716084432,
+      "showNegativeNotifications": true
     }
   ]
 }
