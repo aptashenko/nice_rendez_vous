@@ -10,7 +10,7 @@ import {sendNotification, startTelegramBot} from "./tasks/telegramBotHandler.js"
 import {getSubscribers} from "./services/subscribersManager.js";
 import {addMonthToDate, encrypt} from "./services/utils.js";
 import {createPayment, SECRET_KEY} from "./services/payments.js";
-import { SHCEDULE_DELAY, SHCEDULE_DELAY_NIGHT } from "./config/config.js";
+import {CHECK_URL, SHCEDULE_DELAY, SHCEDULE_DELAY_NIGHT} from "./config/config.js";
 import {log} from "./services/logger.js";
 import {loggerMessageTypes, usersRoles} from "./types/index.js";
 import {readFile} from "fs/promises";
@@ -150,11 +150,34 @@ const checkRendezVous = async () => {
                         // Обычным пользователям отправляем сообщение раз в 10 минут
                         const currentMinute = new Date().getMinutes();
                         if (currentMinute % (delay * 2) === 0) {
-                            await sendNotification(chatId, messageText);
+                            await sendNotification(chatId, messageText, {
+                                reply_markup: {
+                                    inline_keyboard: [
+                                        [
+                                            {
+                                                text: texts.keyboard.buy.button,
+                                                url: CHECK_URL
+                                            }
+                                        ]
+                                    ]
+                                },
+                                parse_mode: 'MarkdownV2'
+                            });
                         }
                     } else {
                         // Для остальных статусов отправляем сообщение каждые 5 минут
-                        await sendNotification(chatId, messageText);
+                        await sendNotification(chatId, messageText, {
+                            reply_markup: {
+                                inline_keyboard: [
+                                    [
+                                        {
+                                            text: texts.check_url,
+                                            url: CHECK_URL
+                                        }
+                                    ]
+                                ]
+                            },
+                        });
                     }
                 }
             }

@@ -5,8 +5,8 @@
       "paid": false,
       "created_at": 1735629569556,
       "subscription_date": null,
-      "activated": false,
-      "role": "user",
+      "activated": true,
+      "role": "admin",
       "nick": "tender_uk",
       "trial_ends": 1735715969556,
       "showNegativeNotifications": true
