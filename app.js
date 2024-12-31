@@ -197,12 +197,12 @@ const checkRendezVous = async () => {
         await startTelegramBot();
         console.log("Telegram-бот запущен.");
         log('Telegram-бот запущен.', loggerMessageTypes.success)
-        // Отправка сообщение пользователям без подписки
-        await checkUnsubscribedUser();
         // Периодическая проверка для всех подписчиков
         schedule.scheduleJob(`*/${SHCEDULE_DELAY} * * * *`, checkRendezVous);
         // Ежедневная проверка подписки пользователей
-        schedule.scheduleJob('0 * * * *', checkUnsubscribedUser);
+        schedule.scheduleJob('0 * * * *', async () => {
+            checkUnsubscribedUser()
+        });
         // Функция для определения текущего интервала
         const scheduleJobs = () => {
             const now = new Date();
