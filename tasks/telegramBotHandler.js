@@ -54,7 +54,7 @@ export async function startTelegramBot() {
         // Добавляем пользователя в подписчики
 
         if (msg.text === '/start') {
-            const isNew = await addSubscriber(chatId, msg.from.username);
+            const isNew = await addSubscriber(chatId, msg.from?.username);
             for (const admin of admins) {
                 if (isNew) {
                     await TELEGRAM_BOT.sendMessage(admin?.chatId, replacePlaceholders(texts.keyboard.usersCount.response2, {date: new Date(Date.now()).toLocaleString(), nick: msg.from.username || 'unknown'}));

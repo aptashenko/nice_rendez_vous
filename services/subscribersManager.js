@@ -1,5 +1,6 @@
 import {db} from "./database.js";
-import {IUser, usersRoles} from "../types/index.js";
+import {IUser, loggerMessageTypes, usersRoles} from "../types/index.js";
+import {log} from "./logger.js";
 
 function countTrialPeriod (days) {
     const hours = days * 24;
@@ -9,13 +10,18 @@ function countTrialPeriod (days) {
 }
 
 export async function addSubscriber(chatId, userName = 'unknown') {
-    const existingSubscriber = db.data.subscribers.find((sub) => sub?.chatId === chatId);
+    const existingSubscriber = db.data.subscribers.find((sub) => sub?.chatId === Number(chatId));
     const trialPeriod = countTrialPeriod(1);
     if (!existingSubscriber) {
-        db.data.subscribers.push({...IUser, chatId, nick: userName, created_at: Date.now(), trial_ends: Date.now() + trialPeriod, role: usersRoles.user});
-        await db.write();
-        console.log(`Добавлен новый подписчик: ${chatId}`);
-        return true
+        try {
+            db.data.subscribers.push({...IUser, chatId, nick: userName, created_at: Date.now(), trial_ends: Date.now() + trialPeriod, role: usersRoles.user});
+            await db.write();
+            console.log(`Добавлен новый подписчик: ${chatId}`);
+            return true
+        } catch (error) {
+            log(JSON.stringify(error), loggerMessageTypes.error, chatId);
+            console.error(error);
+        }
     } else {
         return false
     }
