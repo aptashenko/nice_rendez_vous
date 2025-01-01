@@ -167,6 +167,12 @@ const checkRendezVous = async () => {
                         }
                     }
                 } else {
+                    if (!messageStatus && !showNegativeNotifications) {
+                        //если отключил уведомления в настройках
+                        console.log(`Пропущено уведомление для пользователя ${chatId} из-за отрицательного статуса.`);
+                        continue;
+                    }
+
                     await sendNotification(chatId, messageText, {
                         reply_markup: {
                             inline_keyboard: [
