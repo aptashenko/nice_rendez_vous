@@ -156,13 +156,12 @@ const checkRendezVous = async () => {
                         // Обычным пользователям отправляем сообщение раз в 10 минут
                         const currentMinute = new Date().getMinutes();
                         if (currentMinute % (delay * 2) === 0) {
-                            console.log(chatId, 'send message')
                             await sendNotification(chatId, messageText, {
                                 reply_markup: {
                                     inline_keyboard: [
                                         [
                                             {
-                                                text: texts.keyboard.buy.button,
+                                                text: texts.check_url,
                                                 url: CHECK_URL
                                             }
                                         ]
@@ -173,7 +172,6 @@ const checkRendezVous = async () => {
                         }
                     }
                 } else {
-                    console.log('admin')
                     await sendNotification(chatId, messageText, {
                         reply_markup: {
                             inline_keyboard: [
