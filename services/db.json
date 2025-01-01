@@ -37,7 +37,7 @@
       "chatId": 1810190615,
       "paid": true,
       "created_at": 1735501742223,
-      "subscription_date": null,
+      "subscription_date": 1743465600000,
       "activated": true,
       "role": "user",
       "showNegativeNotifications": true,
@@ -83,9 +83,9 @@
       "created_at": 1735721379617,
       "subscription_date": null,
       "activated": true,
-      "role": "user",
+      "role": "admin",
       "nick": "votre_support",
-      "trial_ends": 1735807779617,
+      "trial_ends": 1735721379617,
       "showNegativeNotifications": true
     }
   ]

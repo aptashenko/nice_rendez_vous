@@ -10,6 +10,17 @@
       "nick": "tender_uk",
       "trial_ends": 1735715969556,
       "showNegativeNotifications": true
+    },
+    {
+      "chatId": 7345474230,
+      "paid": true,
+      "created_at": 1735722325797,
+      "subscription_date": 1743465600000,
+      "activated": true,
+      "role": "user",
+      "nick": "votre_support",
+      "trial_ends": 1735722325797,
+      "showNegativeNotifications": true
     }
   ]
 }

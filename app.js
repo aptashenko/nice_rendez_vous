@@ -91,9 +91,10 @@ const checkUnsubscribedUser = async () => {
         paid,
         trial_ends,
         activated,
+        role,
         subscription_date
     } of subscribers) {
-        if (activated) {
+        if (activated && role === 'user') {
             if (!subscription_date && Date.now() > trial_ends) {
                 log(`Конец триала`, loggerMessageTypes.info, chatId)
             }
