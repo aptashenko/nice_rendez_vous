@@ -29,7 +29,7 @@
       "subscription_date": null,
       "activated": true,
       "role": "admin",
-      "showNegativeNotifications": true,
+      "showNegativeNotifications": false,
       "nick": "tender_uk",
       "trial_ends": 1735499325932
     },
@@ -40,7 +40,7 @@
       "subscription_date": 1743465600000,
       "activated": true,
       "role": "user",
-      "showNegativeNotifications": true,
+      "showNegativeNotifications": false,
       "nick": "unknown",
       "trial_ends": 1735501742223
     },
@@ -48,7 +48,7 @@
       "chatId": 1015149218,
       "paid": true,
       "created_at": 1735502518619,
-      "subscription_date": null,
+      "subscription_date": 1743465600000,
       "activated": true,
       "role": "user",
       "showNegativeNotifications": true,
@@ -84,9 +84,20 @@
       "subscription_date": 1743465600000,
       "activated": true,
       "role": "user",
-      "showNegativeNotifications": true,
+      "showNegativeNotifications": false,
       "nick": "votre_support",
       "trial_ends": 1735501742223
+    },
+    {
+      "chatId": 1883908383,
+      "paid": false,
+      "created_at": 1735756374798,
+      "subscription_date": null,
+      "activated": true,
+      "role": "user",
+      "nick": "OliinikTolik",
+      "trial_ends": 1735842774798,
+      "showNegativeNotifications": true
     }
   ]
 }

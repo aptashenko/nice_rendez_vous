@@ -141,12 +141,7 @@ const checkRendezVous = async () => {
         try {
             if (activated) {
                 if (role === usersRoles.user) {
-                    console.log('user')
-                    console.log('PAID', paid)
-                    console.log('TRIAL', Date.now(), trial_ends)
                     if (paid || Date.now() < trial_ends) {
-                        console.log('PAID', paid)
-                        console.log('TRIAL', Date.now() < trial_ends)
                         if (!messageStatus && !showNegativeNotifications) {
                             //если отключил уведомления в настройках
                             console.log(`Пропущено уведомление для пользователя ${chatId} из-за отрицательного статуса.`);
