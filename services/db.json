@@ -76,6 +76,17 @@
       "nick": "safina1515",
       "trial_ends": 1735725430766,
       "showNegativeNotifications": true
+    },
+    {
+      "chatId": 7345474230,
+      "paid": false,
+      "created_at": 1735721379617,
+      "subscription_date": null,
+      "activated": true,
+      "role": "user",
+      "nick": "votre_support",
+      "trial_ends": 1735807779617,
+      "showNegativeNotifications": true
     }
   ]
 }
