@@ -14,13 +14,13 @@
     {
       "chatId": 7345474230,
       "paid": true,
-      "created_at": 1735722325797,
+      "created_at": 1735501742223,
       "subscription_date": 1743465600000,
       "activated": true,
       "role": "user",
+      "showNegativeNotifications": true,
       "nick": "votre_support",
-      "trial_ends": 1735722325797,
-      "showNegativeNotifications": true
+      "trial_ends": 1735501742223
     }
   ]
 }

@@ -128,29 +128,35 @@ const checkRendezVous = async () => {
     const subscribers = await getSubscribers();
     const {status: messageStatus, text: messageText} = await checkWebsite();
 
-    for (const subscriber of subscribers) {
-        const {
-            chatId,
-            role,
-            activated,
-            paid,
-            showNegativeNotifications,
-            trial_ends
-        } = subscriber; // chatId и status извлекаются из объекта подписчика
+    for (const {
+        chatId,
+        role,
+        activated,
+        paid,
+        showNegativeNotifications,
+        trial_ends,
+        created_at
+    } of subscribers) {
 
         try {
             if (activated) {
-                if (paid || Date.now() < trial_ends) {
-                    if (!messageStatus && !showNegativeNotifications) {
-                        //если отключил уведомления в настройках
-                        console.log(`Пропущено уведомление для пользователя ${chatId} из-за отрицательного статуса.`);
-                        continue;
-                    }
+                if (role === usersRoles.user) {
+                    console.log('user')
+                    console.log('PAID', paid)
+                    console.log('TRIAL', Date.now(), trial_ends)
+                    if (paid || Date.now() < trial_ends) {
+                        console.log('PAID', paid)
+                        console.log('TRIAL', Date.now() < trial_ends)
+                        if (!messageStatus && !showNegativeNotifications) {
+                            //если отключил уведомления в настройках
+                            console.log(`Пропущено уведомление для пользователя ${chatId} из-за отрицательного статуса.`);
+                            continue;
+                        }
 
-                    if (role === usersRoles.user) {
                         // Обычным пользователям отправляем сообщение раз в 10 минут
                         const currentMinute = new Date().getMinutes();
                         if (currentMinute % (delay * 2) === 0) {
+                            console.log(chatId, 'send message')
                             await sendNotification(chatId, messageText, {
                                 reply_markup: {
                                     inline_keyboard: [
@@ -165,21 +171,21 @@ const checkRendezVous = async () => {
                                 parse_mode: 'MarkdownV2'
                             });
                         }
-                    } else {
-                        // Для остальных статусов отправляем сообщение каждые 5 минут
-                        await sendNotification(chatId, messageText, {
-                            reply_markup: {
-                                inline_keyboard: [
-                                    [
-                                        {
-                                            text: texts.check_url,
-                                            url: CHECK_URL
-                                        }
-                                    ]
-                                ]
-                            },
-                        });
                     }
+                } else {
+                    console.log('admin')
+                    await sendNotification(chatId, messageText, {
+                        reply_markup: {
+                            inline_keyboard: [
+                                [
+                                    {
+                                        text: texts.check_url,
+                                        url: CHECK_URL
+                                    }
+                                ]
+                            ]
+                        },
+                    });
                 }
             }
         } catch (err) {
@@ -199,7 +205,8 @@ const checkRendezVous = async () => {
         console.log("Telegram-бот запущен.");
         log('Telegram-бот запущен.', loggerMessageTypes.success)
         // Периодическая проверка для всех подписчиков
-        schedule.scheduleJob(`*/${SHCEDULE_DELAY} * * * *`, checkRendezVous);
+        checkRendezVous()
+        // schedule.scheduleJob(`*/${SHCEDULE_DELAY} * * * *`, checkRendezVous);
         // Ежедневная проверка подписки пользователей
         schedule.scheduleJob('0 * * * *', async () => {
             checkUnsubscribedUser()
