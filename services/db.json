@@ -98,6 +98,17 @@
       "nick": "OliinikTolik",
       "trial_ends": 1735842774798,
       "showNegativeNotifications": true
+    },
+    {
+      "chatId": 487893542,
+      "paid": true,
+      "created_at": 1735818711779,
+      "subscription_date": 1843465600000,
+      "activated": true,
+      "role": "user",
+      "nick": "Demchuk_Liliia",
+      "trial_ends": 1735905111779,
+      "showNegativeNotifications": true
     }
   ]
 }
