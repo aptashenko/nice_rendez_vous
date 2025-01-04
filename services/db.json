@@ -18,7 +18,7 @@
       "subscription_date": null,
       "activated": true,
       "role": "moderator",
-      "showNegativeNotifications": true,
+      "showNegativeNotifications": false,
       "nick": "unknown",
       "trial_ends": 1735479268182
     },
@@ -64,7 +64,7 @@
       "role": "moderator",
       "nick": "al_malikkova",
       "trial_ends": 1735716084432,
-      "showNegativeNotifications": true
+      "showNegativeNotifications": false
     },
     {
       "chatId": 514592376,
@@ -108,6 +108,28 @@
       "role": "user",
       "nick": "Demchuk_Liliia",
       "trial_ends": 1735905111779,
+      "showNegativeNotifications": true
+    },
+    {
+      "chatId": 746484744,
+      "paid": false,
+      "created_at": 1735833084986,
+      "subscription_date": null,
+      "activated": false,
+      "role": "user",
+      "nick": "dearmartina",
+      "trial_ends": 1735919484986,
+      "showNegativeNotifications": true
+    },
+    {
+      "chatId": 1120584277,
+      "paid": false,
+      "created_at": 1735920377513,
+      "subscription_date": null,
+      "activated": true,
+      "role": "user",
+      "nick": "unknown",
+      "trial_ends": 1736006777513,
       "showNegativeNotifications": true
     }
   ]
